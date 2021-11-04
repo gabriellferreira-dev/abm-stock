@@ -1,10 +1,9 @@
 const checkEmptyField = (input) => {
   if (!input.value) {
     input.classList.add('error');
-    return false;
+    return `Field ${input.name} is required.`;
   } else {
     input.classList.remove('error');
-    return true;
   }
 };
 
