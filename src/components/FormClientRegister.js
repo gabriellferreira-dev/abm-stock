@@ -6,6 +6,7 @@ import { TextField } from '../styled-components/TextField';
 import checkEmptyField from '../utils/checkEmptyField';
 import * as api from '../services/api';
 import checkExistClient from '../utils/checkExistClient';
+import validateManyFields from '../utils/validateManyFields';
 
 export default function FormClientRegister() {
   const [client, setClient] = useState({});
@@ -16,10 +17,7 @@ export default function FormClientRegister() {
 
   const validateFields = () => {
     const inputs = inputsContainerRef.current.querySelectorAll('input');
-    inputs.forEach((input) => {
-      checkEmptyField(input);
-    });
-    const result = Array.from(inputs).every((input) => input.value);
+    const result = validateManyFields(inputs);
     setValidation(result);
 
     if (!result) {

@@ -1,15 +1,22 @@
-import { Box, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 import { useContext, useRef, useState } from 'react';
 import { GlobalContext } from '../provider/Provider';
 import { Container } from '../styled-components/Container';
+import { Form } from '../styled-components/Form';
+import { Input } from '../styled-components/Input';
+import { TextField } from '../styled-components/TextField';
+import checkEmptyField from '../utils/checkEmptyField';
+import validateManyFields from '../utils/validateManyFields';
 import List from './List';
+import * as api from '../services/api';
 
-export default function StockForm() {
-  const { products } = useContext(GlobalContext);
+export default function StockForm({ handleModal }) {
+  const { products, setStocks, client, stocks } = useContext(GlobalContext);
   const [searched, setSearched] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [productStock, setProductStock] = useState({});
   const productInputRef = useRef();
+  const inputsContainerRef = useRef();
 
   const searchProduct = (value) => {
     setIsSearching(true);
@@ -24,78 +31,98 @@ export default function StockForm() {
     setIsSearching(false);
   };
 
-  const handleChange = ({ target: { name, value } }) => {
+  const handleChange = ({ target, target: { name, value } }) => {
     setProductStock({ ...productStock, [name]: value });
+    checkEmptyField(target);
 
     if (name === 'name') {
       searchProduct(value);
     }
   };
 
+  const registerStock = async () => {
+    const product = products.find(
+      ({ name }) => name.toLowerCase() === productStock.name.toLowerCase()
+    );
+    const { price, quantity } = productStock;
+    const toRegister = { price, quantity, product, client };
+    await api.create('stocks', toRegister);
+    const stocks = await api.get('stocks');
+    setStocks(stocks);
+  };
+
+  const handleClick = () => {
+    const inputs = inputsContainerRef.current.querySelectorAll('input');
+
+    const inputValidation = validateManyFields(inputs);
+
+    const validations = [
+      inputValidation,
+      productStock.name,
+      productStock.quantity,
+      productStock.price,
+    ];
+
+    if (validations.includes(true)) {
+      registerStock();
+      handleModal(false);
+    }
+  };
+
+  console.log(stocks);
+
   return (
-    <Box
-      component='form'
-      sx={{
-        '& .MuiTextField-root': {
-          m: 1,
-          width: '100%',
-          margin: '8px 0',
-        },
-        '& input, & label': {
-          fontSize: '1.6rem',
-          backgroundColor: '#fff',
-        },
-        '& label': {
-          paddingRight: '4px',
-        },
-        '&': {
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        },
-      }}
-      noValidate
-      autoComplete='off'
-    >
-      <div>
+    <Form>
+      <div ref={inputsContainerRef}>
         <Container ref={productInputRef}>
-          <TextField
-            required
-            id='outlined-required'
-            label='Product'
-            placeholder='Insert product name'
-            onChange={handleChange}
-            value={productStock.name || ''}
-            name='name'
-          />
+          <TextField>
+            <Input
+              required
+              id='product-name'
+              placeholder='Insert product name'
+              onChange={handleChange}
+              value={productStock.name || ''}
+              name='name'
+            />
+            <label htmlFor='product-name'>Name</label>
+          </TextField>
           {isSearching && (
             <List
               searched={searched}
               setProduct={onClickSearchedItem}
               setIsSearching={setIsSearching}
+              productName={productStock.name || ''}
             />
           )}
         </Container>
-        <TextField
-          required
-          id='outlined-required'
-          label='Quantity'
-          placeholder='Insert quantity'
-          type='text'
-          value={productStock.quantity || ''}
-          name='quantity'
-          onChange={handleChange}
-        />
-        <TextField
-          required
-          id='outlined-required'
-          label='Price'
-          value={productStock.price || ''}
-          placeholder='Insert price'
-          name='price'
-          onChange={handleChange}
-        />
+        <TextField>
+          <Input
+            required
+            id='product-quantity'
+            placeholder='Insert quantity'
+            type='number'
+            value={productStock.quantity || ''}
+            name='quantity'
+            onChange={handleChange}
+          />
+          <label htmlFor='product-quantity'>Quantity</label>
+        </TextField>
+        <TextField>
+          <Input
+            required
+            id='product-price'
+            value={productStock.price || ''}
+            placeholder='Insert price'
+            type='number'
+            name='price'
+            onChange={handleChange}
+          />
+          <label htmlFor='product-price'>Price</label>
+        </TextField>
       </div>
-    </Box>
+      <Button variant='contained' color='success' onClick={handleClick}>
+        Register
+      </Button>
+    </Form>
   );
 }

@@ -1,13 +1,40 @@
 import { Button } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { StyledList } from '../styled-components/List';
+import * as api from '../services/api';
+import { GlobalContext } from '../provider/Provider';
 
-export default function List({ searched, setProduct, setIsSearching }) {
+export default function List({
+  searched,
+  setProduct,
+  setIsSearching,
+  productName,
+}) {
   const listSearchedRef = useRef();
+  const { setProducts, products } = useContext(GlobalContext);
+
+  const createProduct = async () => {
+    await api.create('products', { name: productName });
+  };
+
+  const getProducts = async () => {
+    const products = await api.get('products');
+    setProducts(products);
+  };
+
+  const onRegisterProduct = async () => {
+    createProduct();
+    getProducts();
+    setIsSearching(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (listSearchedRef && !listSearchedRef.current.contains(event.target)) {
+      const validations = [
+        listSearchedRef && !listSearchedRef.current.contains(event.target),
+      ];
+
+      if (validations.includes(true)) {
         setIsSearching(false);
       }
     };
@@ -19,6 +46,8 @@ export default function List({ searched, setProduct, setIsSearching }) {
     };
   }, [setIsSearching]);
 
+  console.log(products);
+
   return (
     <StyledList
       name='products'
@@ -28,7 +57,13 @@ export default function List({ searched, setProduct, setIsSearching }) {
       {!searched.length ? (
         <li>
           Nenhum produto cadastrado com esse nome.
-          <Button variant='contained'>Register Product</Button>
+          <Button
+            name='register'
+            variant='contained'
+            onClick={onRegisterProduct}
+          >
+            Register Product
+          </Button>
         </li>
       ) : (
         searched.map(({ name }, i) => (

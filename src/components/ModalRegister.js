@@ -1,4 +1,4 @@
-import { Fade, Modal, Typography, Box, Backdrop, Button } from '@mui/material';
+import { Fade, Modal, Typography, Box, Backdrop } from '@mui/material';
 import StockForm from './StockForm';
 
 const style = {
@@ -38,10 +38,7 @@ function ModalRegister({ handleModal, open }) {
           <Typography id='transition-modal-title' variant='h4' component='h2'>
             Register new stock
           </Typography>
-          <StockForm />
-          <Button variant='contained' color='success'>
-            Register
-          </Button>
+          <StockForm handleModal={handleModal} />
         </Box>
       </Fade>
     </Modal>

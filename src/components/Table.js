@@ -10,7 +10,7 @@ import { GlobalContext } from '../provider/Provider';
 import { StyledTable } from '../styled-components/Table';
 
 function TableComponent() {
-  const { products } = useContext(GlobalContext);
+  const { stocks } = useContext(GlobalContext);
 
   return (
     <StyledTable sx={{ minWidth: 700 }} aria-label='customized table'>
@@ -24,13 +24,13 @@ function TableComponent() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {products &&
-          products.map((product) => (
-            <TableRow data-testid='product' key={product._id}>
-              <TableCell>{product._id}</TableCell>
+        {stocks &&
+          stocks.map(({_id, quantity, price, product}) => (
+            <TableRow data-testid='product' key={_id}>
+              <TableCell>{_id}</TableCell>
               <TableCell>{product.name}</TableCell>
-              <TableCell>{product.quantity}</TableCell>
-              <TableCell>{product.price}</TableCell>
+              <TableCell>{quantity}</TableCell>
+              <TableCell>{price}</TableCell>
               <TableCell>
                 <Button variant='contained' color='warning'>
                   Select

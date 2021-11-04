@@ -24,10 +24,10 @@ export default function FormClientLogin() {
     setErrorMessage(fieldValidation ? fieldValidation : '');
 
     setEmail(value);
-    getClients();
   };
 
   const validateClient = async () => {
+    getClients();
     const clientExist = await checkExistClient(email);
 
     setErrorMessage(!clientExist ? 'Client not found' : '');
@@ -48,7 +48,7 @@ export default function FormClientLogin() {
   };
 
   return (
-    <Form>
+    <Form login>
       <h1>ABM Stock</h1>
       <div>
         <TextField>

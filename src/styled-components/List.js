@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const StyledList = styled.ul`
-  width: 100%;
+  width: 80%;
   max-height: 100px;
   list-style: none;
   background-color: white;
@@ -11,6 +11,7 @@ export const StyledList = styled.ul`
   z-index: 1000;
   text-align: left;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  top: 50px;
 
   & li {
     padding: 5px 10px;
