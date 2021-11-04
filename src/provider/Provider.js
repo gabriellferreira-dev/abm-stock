@@ -4,6 +4,8 @@ export const GlobalContext = createContext({});
 
 const Provider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [client, setClient] = useState([]);
   const [isLogged, setLogged] = useState(false);
 
   const context = {
@@ -11,6 +13,10 @@ const Provider = ({ children }) => {
     setProducts,
     isLogged,
     setLogged,
+    clients,
+    setClients,
+    client,
+    setClient,
   };
 
   return (
