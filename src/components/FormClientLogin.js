@@ -8,7 +8,7 @@ import * as api from '../services/api';
 
 export default function FormClientLogin() {
   const loginInputRef = useRef();
-  const { setClients } = useContext(GlobalContext);
+  const { setClients, clients } = useContext(GlobalContext);
 
   const getClients = async () => {
     const clients = await api.get('clients');
@@ -22,6 +22,8 @@ export default function FormClientLogin() {
   const handleClick = () => {
     checkEmptyField(loginInputRef.current);
   };
+
+  console.log(clients)
 
   return (
     <Form>

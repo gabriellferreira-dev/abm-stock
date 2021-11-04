@@ -1,12 +1,17 @@
 import { useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Form } from '../styled-components/Form';
 import { Input } from '../styled-components/Input';
 import { TextField } from '../styled-components/TextField';
 import checkEmptyField from '../utils/checkEmptyField';
+import * as api from '../services/api';
+import checkExistClient from '../utils/checkExistClient';
 
 export default function FormClientRegister() {
   const [client, setClient] = useState({});
   const [validation, setValidation] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isCreated, setCreated] = useState(false);
   const inputsContainerRef = useRef();
 
   const validateFields = () => {
@@ -16,6 +21,25 @@ export default function FormClientRegister() {
     });
     const result = Array.from(inputs).every((input) => input.value);
     setValidation(result);
+
+    if (!result) {
+      setErrorMessage('Fill in all fields.');
+    } else {
+      setErrorMessage('');
+    }
+  };
+
+  const createClient = async () => {
+    const clientExist = await checkExistClient(client.email);
+
+    if (!clientExist) {
+      await api.create('clients', client);
+      setErrorMessage('');
+      setCreated(true);
+    }
+    if (clientExist) {
+      setErrorMessage('Customer already registered.');
+    }
   };
 
   const handleChange = ({ target: { name, value } }) => {
@@ -27,7 +51,15 @@ export default function FormClientRegister() {
 
   const handleClick = () => {
     validateFields();
+
+    const inputsValidation = [!client.name, !client.email, !client.lastName];
+
+    if (!inputsValidation.includes(true)) {
+      createClient();
+    }
   };
+
+  if (isCreated) return <Redirect to='/login' />;
 
   return (
     <Form name='register'>
@@ -69,7 +101,7 @@ export default function FormClientRegister() {
           />
           <label htmlFor='input-email'>E-mail</label>
         </TextField>
-        <span hidden={validation}>Fill in all fields.</span>
+        <span hidden={!errorMessage}>{errorMessage}</span>
       </div>
       <button type='button' onClick={handleClick}>
         Register
