@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Section = styled.section`
   width: 100%;
@@ -7,24 +7,28 @@ export const Section = styled.section`
   align-items: center;
   justify-content: space-between;
   padding: 80px 20px 10px;
+  position: relative;
+  overflow: hidden;
 
-  & > div {
-    width: 100%;
-    height: 60px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: #272d2f;
-    top: 0;
-    left: 0;
-    position: fixed;
-    margin-bottom: 10px;
+  ${({ login }) =>
+    login &&
+    css`
+      background-color: #fff;
+      height: 100vh;
+      padding: 0;
+      flex-direction: row;
+      justify-content: center;
 
-    & h1 {
-      color: #ffc529;
-      font-weight: 700;
-      font-size: 1.6em;
-    }
-  }
+      & a {
+        position: absolute;
+        bottom: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        color: #ffc529;
+
+        :visited {
+          color: #ffc529;
+        }
+      }
+    `}
 `;
