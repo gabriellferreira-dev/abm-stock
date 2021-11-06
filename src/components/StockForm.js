@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
 import { GlobalContext } from '../provider/Provider';
 import { Container } from '../styled-components/Container';
 import { Form } from '../styled-components/Form';
@@ -10,13 +10,21 @@ import validateManyFields from '../utils/validateManyFields';
 import List from './List';
 import * as api from '../services/api';
 
-export default function StockForm({ handleModal }) {
-  const { products, client, getStocks } = useContext(GlobalContext);
+export default function StockForm({ handleModal, stock }) {
+  const { products, client, getStocks, isUpdating, setUpdating } =
+    useContext(GlobalContext);
   const [searched, setSearched] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [productStock, setProductStock] = useState({});
   const productInputRef = useRef();
   const inputsContainerRef = useRef();
+
+  useEffect(() => {
+    setProductStock({
+      name: stock?.product?.name,
+      ...stock,
+    });
+  }, [stock]);
 
   const searchProduct = (value) => {
     setIsSearching(true);
@@ -40,30 +48,47 @@ export default function StockForm({ handleModal }) {
     }
   };
 
-  const registerStock = async () => {
-    const product = products.find(
+  const findProduct = () =>
+    products.find(
       ({ name }) => name.toLowerCase() === productStock.name.toLowerCase()
     );
+
+  const registerStock = async () => {
+    const product = findProduct();
     const { price, quantity } = productStock;
     const toRegister = { price, quantity, product, client };
     await api.create('stocks', toRegister);
     await getStocks();
   };
 
-  const handleClick = () => {
+  const updateStock = async () => {
+    const product = findProduct();
+    const { price, quantity } = productStock;
+    const { _id, ...rest } = stock;
+    const toUpdate = { ...rest, price, quantity, product };
+    await api.edit('stocks', stock._id, toUpdate);
+    await getStocks();
+  };
+
+  const handleClick = async () => {
     const inputs = inputsContainerRef.current.querySelectorAll('input');
 
     const inputValidation = validateManyFields(inputs);
 
     const validations = [
       inputValidation,
-      productStock.name,
+      productStock.product,
       productStock.quantity,
       productStock.price,
     ];
 
     if (validations.includes(true)) {
-      registerStock();
+      if (isUpdating) {
+        updateStock();
+        setUpdating(false);
+      } else {
+        registerStock();
+      }
       handleModal(false);
     }
   };
@@ -118,7 +143,7 @@ export default function StockForm({ handleModal }) {
         </TextField>
       </div>
       <Button variant='contained' color='success' onClick={handleClick}>
-        Register
+        {isUpdating ? 'Update' : 'Register'}
       </Button>
     </Form>
   );

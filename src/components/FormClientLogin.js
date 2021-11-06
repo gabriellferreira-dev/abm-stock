@@ -48,7 +48,7 @@ export default function FormClientLogin() {
   };
 
   return (
-    <Form login>
+    <Form login onSubmit={(e) => e.preventDefault()}>
       <h1>ABM Stock</h1>
       <div>
         <TextField>

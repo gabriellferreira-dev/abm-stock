@@ -9,10 +9,23 @@ import ModalRegister from '../components/ModalRegister';
 import { Header } from '../styled-components/Header';
 
 function Home() {
-  const { isLogged, getStocks, getProducts } = useContext(GlobalContext);
+  const { isLogged, getStocks, getProducts, setUpdating } =
+    useContext(GlobalContext);
   const [open, setOpen] = useState(false);
+  const [stock, setStock] = useState({});
 
   const handleModal = () => setOpen(!open);
+
+  const handleNewStockClick = () => {
+    setUpdating(false);
+    setStock({});
+    handleModal();
+  };
+
+  const getStock = async (id) => {
+    const result = await api.getById('stocks', id);
+    setStock(result);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -20,7 +33,8 @@ function Home() {
       await getStocks();
     };
     getData();
-  }, [getProducts, getStocks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isLogged) {
     return <Redirect to='/login' />;
@@ -30,12 +44,16 @@ function Home() {
     <Section>
       <Header>
         <h1>ABM Stock</h1>
-        <StyledButton variant='contained' size='small' onClick={handleModal}>
+        <StyledButton
+          variant='contained'
+          size='small'
+          onClick={handleNewStockClick}
+        >
           New stock
         </StyledButton>
       </Header>
-      <Table />
-      <ModalRegister open={open} handleModal={handleModal} />
+      <Table handleModal={handleModal} getStock={getStock} />
+      <ModalRegister open={open} handleModal={handleModal} stock={stock} />
     </Section>
   );
 }

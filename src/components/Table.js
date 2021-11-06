@@ -10,8 +10,8 @@ import { GlobalContext } from '../provider/Provider';
 import { StyledTable } from '../styled-components/Table';
 import * as api from '../services/api';
 
-function TableComponent() {
-  const { stocks, getStocks } = useContext(GlobalContext);
+function TableComponent({ handleModal, getStock }) {
+  const { stocks, getStocks, setUpdating } = useContext(GlobalContext);
 
   const removeStock = async (id) => {
     const isExistStock = stocks.find((stock) => stock._id === id);
@@ -24,6 +24,12 @@ function TableComponent() {
 
   const handleClickDelete = ({ target: { id } }) => {
     removeStock(id);
+  };
+
+  const handleClickSelect = ({ target: { id } }) => {
+    getStock(id);
+    handleModal(true);
+    setUpdating(true);
   };
 
   return (
@@ -46,7 +52,12 @@ function TableComponent() {
               <TableCell>{quantity}</TableCell>
               <TableCell>{price}</TableCell>
               <TableCell>
-                <Button variant='contained' color='warning'>
+                <Button
+                  variant='contained'
+                  color='warning'
+                  id={_id}
+                  onClick={handleClickSelect}
+                >
                   Select
                 </Button>
                 <Button

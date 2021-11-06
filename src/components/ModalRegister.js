@@ -20,7 +20,7 @@ const style = {
   padding: '5px',
 };
 
-function ModalRegister({ handleModal, open }) {
+function ModalRegister({ handleModal, open, stock }) {
   return (
     <Modal
       aria-labelledby='transition-modal-title'
@@ -38,7 +38,7 @@ function ModalRegister({ handleModal, open }) {
           <Typography id='transition-modal-title' variant='h4' component='h2'>
             Register new stock
           </Typography>
-          <StockForm handleModal={handleModal} />
+          <StockForm handleModal={handleModal} stock={stock} />
         </Box>
       </Fade>
     </Modal>

@@ -11,6 +11,7 @@ export const Input = styled.input`
 
   ::placeholder {
     color: transparent;
+    user-select: none;
   }
 
   &:focus,

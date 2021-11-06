@@ -9,6 +9,7 @@ const Provider = ({ children }) => {
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState();
   const [isLogged, setLogged] = useState(false);
+  const [isUpdating, setUpdating] = useState(false);
 
   const getStocks = async () => {
     const result = await api.get('stocks');
@@ -33,6 +34,8 @@ const Provider = ({ children }) => {
     setStocks,
     getStocks,
     getProducts,
+    isUpdating,
+    setUpdating,
   };
 
   return (

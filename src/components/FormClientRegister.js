@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom';
 import { Form } from '../styled-components/Form';
 import { Input } from '../styled-components/Input';
 import { TextField } from '../styled-components/TextField';
-import checkEmptyField from '../utils/checkEmptyField';
 import * as api from '../services/api';
 import checkExistClient from '../utils/checkExistClient';
 import validateManyFields from '../utils/validateManyFields';
@@ -60,7 +59,7 @@ export default function FormClientRegister() {
   if (isCreated) return <Redirect to='/login' />;
 
   return (
-    <Form name='register'>
+    <Form name='register' onSubmit={(e) => e.preventDefault()}>
       <h1>Register</h1>
       <div ref={inputsContainerRef}>
         <TextField register>

@@ -11,7 +11,7 @@ export default function List({
   productName,
 }) {
   const listSearchedRef = useRef();
-  const { products, getProducts } = useContext(GlobalContext);
+  const { getProducts } = useContext(GlobalContext);
 
   const createProduct = async () => {
     await api.create('products', { name: productName });
@@ -40,8 +40,6 @@ export default function List({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [setIsSearching]);
-
-  console.log(products);
 
   return (
     <StyledList
