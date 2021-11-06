@@ -70,9 +70,10 @@ export default function StockForm({ handleModal, stock }) {
     await api.edit('stocks', stock._id, toUpdate);
     await getStocks();
     handleModal(false);
+    setUpdating(false);
   };
 
-  const handleClick = async () => {
+  const handleClick = () => {
     const inputs = inputsContainerRef.current.querySelectorAll('input');
 
     const inputValidation = validateManyFields(inputs);
@@ -86,10 +87,9 @@ export default function StockForm({ handleModal, stock }) {
 
     if (validations.includes(true)) {
       if (isUpdating) {
-        await updateStock();
-        setUpdating(false);
+        updateStock();
       } else {
-        await registerStock();
+        registerStock();
       }
     }
   };
