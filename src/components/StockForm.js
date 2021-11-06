@@ -59,6 +59,7 @@ export default function StockForm({ handleModal, stock }) {
     const toRegister = { price, quantity, product, client };
     await api.create('stocks', toRegister);
     await getStocks();
+    handleModal(false);
   };
 
   const updateStock = async () => {
@@ -68,6 +69,7 @@ export default function StockForm({ handleModal, stock }) {
     const toUpdate = { ...rest, price, quantity, product };
     await api.edit('stocks', stock._id, toUpdate);
     await getStocks();
+    handleModal(false);
   };
 
   const handleClick = async () => {
@@ -84,12 +86,11 @@ export default function StockForm({ handleModal, stock }) {
 
     if (validations.includes(true)) {
       if (isUpdating) {
-        updateStock();
+        await updateStock();
         setUpdating(false);
       } else {
-        registerStock();
+        await registerStock();
       }
-      handleModal(false);
     }
   };
 

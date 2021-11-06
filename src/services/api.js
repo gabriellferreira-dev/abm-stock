@@ -23,13 +23,11 @@ export const getById = async (endpoint, id) => {
 };
 
 export const edit = async (endpoint, id, data) => {
-  const response = await fetch(`${URL}/${endpoint}/${id}`, {
+  await fetch(`${URL}/${endpoint}/${id}`, {
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
     method: 'PUT',
     body: JSON.stringify(data),
   });
-  const updated = await response.json();
-  return updated;
 };
 
 export const remove = async (endpoint, id) => {
