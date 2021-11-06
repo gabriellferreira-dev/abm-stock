@@ -11,15 +11,10 @@ export default function List({
   productName,
 }) {
   const listSearchedRef = useRef();
-  const { setProducts, products } = useContext(GlobalContext);
+  const { products, getProducts } = useContext(GlobalContext);
 
   const createProduct = async () => {
     await api.create('products', { name: productName });
-  };
-
-  const getProducts = async () => {
-    const products = await api.get('products');
-    setProducts(products);
   };
 
   const onRegisterProduct = async () => {

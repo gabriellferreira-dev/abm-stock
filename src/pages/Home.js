@@ -9,20 +9,18 @@ import ModalRegister from '../components/ModalRegister';
 import { Header } from '../styled-components/Header';
 
 function Home() {
-  const { setProducts, setStocks, isLogged } = useContext(GlobalContext);
+  const { isLogged, getStocks, getProducts } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
 
   const handleModal = () => setOpen(!open);
 
   useEffect(() => {
     const getData = async () => {
-      const stocks = await api.get('stocks');
-      const products = await api.get('products');
-      setStocks(stocks);
-      setProducts(products);
+      await getProducts();
+      await getStocks();
     };
     getData();
-  }, [setProducts, setStocks]);
+  }, [getProducts, getStocks]);
 
   if (!isLogged) {
     return <Redirect to='/login' />;

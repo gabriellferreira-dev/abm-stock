@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import * as api from '../services/api';
 
 export const GlobalContext = createContext({});
 
@@ -8,6 +9,16 @@ const Provider = ({ children }) => {
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState();
   const [isLogged, setLogged] = useState(false);
+
+  const getStocks = async () => {
+    const result = await api.get('stocks');
+    setStocks(result);
+  };
+
+  const getProducts = async () => {
+    const result = await api.get('products');
+    setProducts(result);
+  };
 
   const context = {
     products,
@@ -20,6 +31,8 @@ const Provider = ({ children }) => {
     setClient,
     stocks,
     setStocks,
+    getStocks,
+    getProducts,
   };
 
   return (

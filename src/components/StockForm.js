@@ -11,7 +11,7 @@ import List from './List';
 import * as api from '../services/api';
 
 export default function StockForm({ handleModal }) {
-  const { products, setStocks, client, stocks } = useContext(GlobalContext);
+  const { products, client, getStocks } = useContext(GlobalContext);
   const [searched, setSearched] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [productStock, setProductStock] = useState({});
@@ -47,8 +47,7 @@ export default function StockForm({ handleModal }) {
     const { price, quantity } = productStock;
     const toRegister = { price, quantity, product, client };
     await api.create('stocks', toRegister);
-    const stocks = await api.get('stocks');
-    setStocks(stocks);
+    await getStocks();
   };
 
   const handleClick = () => {
@@ -68,8 +67,6 @@ export default function StockForm({ handleModal }) {
       handleModal(false);
     }
   };
-
-  console.log(stocks);
 
   return (
     <Form>
