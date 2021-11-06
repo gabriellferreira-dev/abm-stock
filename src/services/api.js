@@ -1,4 +1,4 @@
-const URL = process.env.REACT_APP_CRUDCRUD_URL;
+const URL = 'https://crudcrud.com/api/f5f2d99dd78a402087d2fadca60f9f83';
 
 export const create = async (endpoint, data) => {
   const response = await fetch(`${URL}/${endpoint}`, {
